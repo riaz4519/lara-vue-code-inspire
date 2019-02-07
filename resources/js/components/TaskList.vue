@@ -38,7 +38,13 @@
 
         created(){
 
-            axios.get('./api/task').then( response => this.tasks = response.data)
+            Event.$on('taskCreated',() => {
+
+                axios.get('./api/task').then( response => this.tasks = response.data);
+
+            });
+
+            axios.get('./api/task').then( response => this.tasks = response.data);
 
 
         },

@@ -1796,6 +1796,12 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
 //
 //
 //
@@ -1827,16 +1833,57 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+var Errors =
+/*#__PURE__*/
+function () {
+  function Errors() {
+    _classCallCheck(this, Errors);
+
+    this.errors = {};
+  }
+
+  _createClass(Errors, [{
+    key: "get",
+    value: function get(field) {
+      //console.log(this.errors.title);
+      if (this.errors[field]) {
+        console.log('fdfs');
+        return this.errors.title[0];
+      }
+    }
+  }, {
+    key: "record",
+    value: function record(errors) {
+      this.errors = errors;
+    }
+  }]);
+
+  return Errors;
+}();
+
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
-      title: ''
+      title: '',
+      errors: new Errors()
     };
   },
   methods: {
     addTask: function addTask() {
+      var _this = this;
+
       axios.post('./api/task', {
         title: this.title
+      }).then(function (response) {
+        _this.title = '';
+        Event.$emit('taskCreated');
+        console.log(response.data.message);
+      }).catch(function (error) {
+        _this.errors.record(error.response.data.errors);
       });
     }
   }
@@ -1883,6 +1930,11 @@ __webpack_require__.r(__webpack_exports__);
   created: function created() {
     var _this = this;
 
+    Event.$on('taskCreated', function () {
+      axios.get('./api/task').then(function (response) {
+        return _this.tasks = response.data;
+      });
+    });
     axios.get('./api/task').then(function (response) {
       return _this.tasks = response.data;
     });
@@ -36836,7 +36888,12 @@ var render = function() {
                     _vm.title = $event.target.value
                   }
                 }
-              })
+              }),
+              _vm._v(
+                "\n\n\n                        " +
+                  _vm._s(_vm.errors.get("title")) +
+                  "\n\n\n                "
+              )
             ]),
             _vm._v(" "),
             _vm._m(0)
@@ -48838,6 +48895,7 @@ module.exports = function(module) {
 __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js");
 
 window.Vue = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.js");
+window.Event = new Vue();
 /**
  * The following block of code may be used to automatically register your
  * Vue components. It will recursively scan this directory for the Vue

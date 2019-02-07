@@ -39,6 +39,12 @@ class TaskController extends Controller
     {
         //
 
+        $this->validate($request,[
+
+            'title' => 'required'
+
+        ]);
+
         Task::create($request->all());
 
         return (['message' =>'Task was successful' ] );

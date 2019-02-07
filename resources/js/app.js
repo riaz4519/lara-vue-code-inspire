@@ -9,6 +9,8 @@ require('./bootstrap');
 
 window.Vue = require('vue');
 
+window.Event = new Vue();
+
 
 
 /**

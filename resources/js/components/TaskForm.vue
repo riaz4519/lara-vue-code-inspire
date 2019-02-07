@@ -12,6 +12,10 @@
 
                                 <input type="text" name="title" v-model="title" placeholder="Task title" class="form-control">
 
+
+                                    {{ errors.get('title') }}
+
+
                             </div>
 
 
@@ -30,7 +34,41 @@
 </template>
 
 <script>
+
+
+    class Errors{
+
+        constructor(){
+
+            this.errors = {};
+        }
+
+        get(field){
+
+            //console.log(this.errors.title);
+
+            if (this.errors[field]){
+
+                console.log('fdfs');
+
+                return this.errors.title[0];
+            }
+
+
+
+
+        }
+        record(errors){
+
+            this.errors = errors;
+
+        }
+
+
+    }
+
     export default {
+
 
 
         data(){
@@ -38,6 +76,8 @@
             return {
 
                 title:'',
+                errors: new Errors()
+
 
             }
         },
@@ -50,10 +90,26 @@
 
                     title: this.title,
 
+
+                }).then( (response) => {
+
+
+                    this.title = '';
+
+                    Event.$emit('taskCreated');
+
+                    console.log(response.data.message);
+
+                }).catch(error => {
+
+
+
+
+                  this.errors.record(error.response.data.errors);
+
+
+
                 });
-
-
-
 
 
 
